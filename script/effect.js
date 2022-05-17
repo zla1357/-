@@ -114,7 +114,7 @@ Exploader.prototype = {
     },
     update:function() {
         this.time = Math.min(this.duration, this.time + timeStep);
-        this.progress = Ease.inBack(this.time, 0, 1, this.duration);
+        this.progress = Ease.inBack(this.time, 0, 0, this.duration);
 
         this.complete = this.time === this.duration;
     },
@@ -164,7 +164,7 @@ function update() {
 
     switch (phase) {
         case 0:
-            loader.progress += (1/45);
+            loader.progress += 1;
             break;
         case 1:
             exploader.update();
