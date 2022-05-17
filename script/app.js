@@ -10,18 +10,34 @@ $(document).ready(function(){
     }
 
     beforeAnimation();
-    executeAnimation();
 
-    timer = setTimeout(function() {
-      drawResult.innerText = "당첨자는: " + drawCandidate(candidate) + " 입니다.";      
-    }, 500);
+    const drawTimer = setTimeout(function() {
+      executeAnimation();
+      clearTimeout(drawTimer);
+      const alertTimer = setTimeout(function() {
+        document.getElementById("drawResult").innerText = "당첨자는: " + drawCandidate(candidate) + " 입니다.";      
+      }, 200);
+    }, 3000);
   });
 });
 
 function beforeAnimation() {
 
   let drawResult = document.getElementById("drawResult");
-  drawResult.innerText = "당첨자는? ";
+  let countDown = 3;
+
+  drawResult.innerText = "당첨자는? " + countDown;
+
+  const countTimer = setInterval(function() {
+
+    countDown--;
+
+    if(countDown === 0) {
+      clearInterval(countTimer);
+    } else {
+      drawResult.innerText = "당첨자는? " + countDown;
+    }
+  }, 1000);
 
   let btnExecute = document.getElementById("execute")
   btnExecute.style.visibility = "hidden";
