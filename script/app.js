@@ -1,5 +1,12 @@
 let candidate = [];
 let emailCol = 0;
+let phoneNumberCol = 0;
+let nameCol = 0;
+const COL_NAME = {
+  EMAIL: "이메일 주소",
+  PHONE_NUMBER: "전화번호",
+  NAME: "이름"
+}
 
 $(document).ready(function(){
 
@@ -54,7 +61,8 @@ function endAnimation() {
 
 function drawCandidate(array) {
   const random = Math.floor(Math.random() * array.length);
-  return array[random].split(",")[emailCol];
+  const pickedCandidateInfo = array[random].split(",");
+  return generatePrintPersonalInfo(pickedCandidateInfo[nameCol], pickedCandidateInfo[phoneNumberCol]);
 }
 
 function openTextFile() {
@@ -73,15 +81,25 @@ function processFile(file) {
   reader.onload = function () {
     let output = document.getElementById("output");
     candidate = reader.result.split("\r\n");
-    emailCol = candidate[0].split(",").findIndex(e => e == "이메일 주소");
+    emailCol = candidate[0].split(",").findIndex(e => e == COL_NAME.EMAIL);
+    phoneNumberCol = candidate[0].split(",").findIndex(e => e == COL_NAME.PHONE_NUMBER);
+    nameCol = candidate[0].split(",").findIndex(e => e == COL_NAME.NAME);
     candidate.shift();
 
-    let emailList = [];
+    let printList = [];
     for(const element of candidate) {
-      emailList.push(element.split(",")[emailCol]);
+
+      let personalInfo = element.split(",");
+      let printPersonalInfo = generatePrintPersonalInfo(personalInfo[nameCol], personalInfo[phoneNumberCol].replaceAll("-", ""));
+
+      printList.push(printPersonalInfo);
     }
-    output.innerText = emailList.join("\r\n");
+    output.innerText = printList.join("\r\n");
   };
 
   reader.readAsText(file, "utf-8");
+}
+
+function generatePrintPersonalInfo(name, phoneNumber) {
+  return name + " " + phoneNumber.substr(phoneNumber.length - 4)
 }
